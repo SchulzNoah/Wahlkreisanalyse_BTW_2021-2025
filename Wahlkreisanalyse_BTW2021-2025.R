@@ -104,6 +104,7 @@ prepare_partei <- function(data, stimme, jahr, partei, wk_shp) {
 
 # -------------------- UI --------------------
 
+# Customizing der Seite
 ui <- fluidPage(
   title = "Wahlkreisanalyse: Bundestagswahl 2021 und 2025 im Vergleich",
   tags$head(
@@ -260,5 +261,6 @@ server <- function(input, output, session) {
 
 
 # Start der App -----------------------------------------------------------
+
 
 shinyApp(ui, server)
