@@ -7,26 +7,25 @@ Interaktives R-Shiny Dashboard zur Analyse der Bundestagswahlen 2021/2025. Inter
 
 ---
 
-## 📂 Repository Structure
+## 📂 Repository Struktur
 
 ```
 Wahlkreisanalyse_BTW_2021-2025/
 │
-├── Code/                         # R script for the Shiny Dashboard
+├── Code/                         # R script für Shiny-Dasboard
 │   └── Wahlkreisanalyse.R        # Shiny app
 │
 │
-├── Data/                                          # Datasets and geospatial information
-│   ├── btw25_geometrie_wahlkreise_shp_geo.shp     # Shapefiles for electoral districts
-│   └── BTW2025                                    # Dataset German Federal Election
+├── Data/                                          # Datensätze
+│   ├── btw25_geometrie_wahlkreise_shp_geo.shp     # Shapefiles für Wahlkreise
+│   └── BTW2025                                    # Datensatz Bundestagswahlen 2021 und 2025
 ```
 
 ---
 
-## 📬 Contact
+## 📬 Kontact
 
 **Noah Schulz (B.A.)**  
-Quantitative social researcher
 
 **LinkedIn:** [<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/LinkedIn_logo_initials.png/960px-LinkedIn_logo_initials.png" width="30" />](https://www.linkedin.com/in/noah-schulz-971031301/)
 
