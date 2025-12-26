@@ -104,7 +104,6 @@ prepare_partei <- function(data, stimme, jahr, partei, wk_shp) {
 
 # -------------------- UI --------------------
 
-# Customizing der Seite
 ui <- fluidPage(
   title = "Wahlkreisanalyse: Bundestagswahl 2021 und 2025 im Vergleich",
   tags$head(
@@ -115,7 +114,7 @@ ui <- fluidPage(
         background-color: white; border: 1px solid black; border-radius: 10px; 
         padding: 20px; margin-top: 40px; box-shadow: 0 0 5px rgba(0,0,0,0.05);
       }
-            .contact-box { position: fixed; bottom: 20px; left: 20px; background: white; padding: 15px; border-radius: 10px; border: 1px solid #000; z-index: 1000; }
+      .contact-box { position: fixed; bottom: 20px; left: 20px; background: white; padding: 15px; border-radius: 10px; border: 1px solid #000; z-index: 1000; }
       #wahlkarte { height: calc(100vh - 160px) !important; border-radius: 12px; border: 1px solid black; }
     "))
   ),
@@ -204,24 +203,38 @@ server <- function(input, output, session) {
     map_data <- current_map_data()
     req(map_data)
     
+    proxy <- leafletProxy("wahlkarte", data = map_data)
+    proxy %>% clearShapes() %>% clearControls()
+    
     if (input$anzeige == "Stärkste Partei") {
       pal <- colorFactor(palette = partei_farben, domain = map_data$Staerkste)
       fill_val <- ~pal(Staerkste)
+      
+      proxy %>%
+        addPolygons(
+          fillColor = fill_val, fillOpacity = 0.85, weight = 1.5, color = "#bebfc2",
+          layerId = ~WKR_NR, popup = ~popup_text, label = ~WKR_NAME,
+          highlightOptions = highlightOptions(weight = 2, color = "#333", bringToFront = TRUE)
+        ) %>%
+        addLegend(pal = pal, values = ~Staerkste, title = "Stärkste Partei", position = "bottomright")
+      
     } else {
       req(!all(is.na(map_data$Prozent)))
       base_col <- if(input$anzeige == "CDU/CSU") "black" else partei_farben[input$anzeige]
       pal <- colorNumeric(palette = c("white", base_col), domain = range(map_data$Prozent, na.rm = TRUE))
       fill_val <- ~pal(Prozent)
+      
+      proxy %>%
+        addPolygons(
+          fillColor = fill_val, fillOpacity = 0.85, weight = 1.5, color = "#bebfc2",
+          layerId = ~WKR_NR, popup = ~popup_text, label = ~WKR_NAME,
+          highlightOptions = highlightOptions(weight = 2, color = "#333", bringToFront = TRUE)
+        ) %>%
+        addLegend(pal = pal, values = ~Prozent, title = paste(input$anzeige), 
+                  position = "bottomright", labFormat = labelFormat(suffix = " %"))
     }
     
-    leafletProxy("wahlkarte", data = map_data) %>%
-      clearShapes() %>% clearControls() %>%
-      addPolygons(
-        fillColor = fill_val, fillOpacity = 0.85, weight = 1.5, color = "#bebfc2",
-        layerId = ~WKR_NR, popup = ~popup_text, label = ~WKR_NAME,
-        highlightOptions = highlightOptions(weight = 2, color = "#333", bringToFront = TRUE)
-      ) %>%
-      addPolylines(data = bundeslaender_fix, color = "white", weight = 1.5)
+    proxy %>% addPolylines(data = bundeslaender_fix, color = "white", weight = 1.5)
   })
   
   # Reaktion auf Suche & Reinzoomen
@@ -262,5 +275,5 @@ server <- function(input, output, session) {
 
 # Start der App -----------------------------------------------------------
 
-
 shinyApp(ui, server)
+
