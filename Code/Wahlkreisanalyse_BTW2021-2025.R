@@ -23,6 +23,7 @@ bundeslaender_fix <- wk %>%
   group_by(LAND_NAME) %>%
   summarise(geometry = st_union(geometry), .groups = "drop")
 
+# Farben festlegen
 partei_farben <- c(
   "AfD" = "#009fe1", "CDU" = "black", "CSU" = "#213651", "SPD" = "#d71f1d",
   "GRÜNE" = "#58ab27", "Die Linke" = "#AA00AA", "FDP" = "#ffed00",
@@ -278,5 +279,6 @@ server <- function(input, output, session) {
 # Start der App -----------------------------------------------------------
 
 shinyApp(ui, server)
+
 
 
